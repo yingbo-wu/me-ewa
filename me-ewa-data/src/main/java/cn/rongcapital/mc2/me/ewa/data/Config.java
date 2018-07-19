@@ -1,7 +1,6 @@
 package cn.rongcapital.mc2.me.ewa.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -13,8 +12,6 @@ import org.apache.ignite.IgniteCheckedException;
 import org.apache.ignite.IgniteSpring;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
-import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
-import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
 import org.apache.ignite.springdata.repository.config.EnableIgniteRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +34,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 
+import cn.rongcapital.mc2.me.commons.infrastructure.ignite.IgniteCacheLoader;
+import cn.rongcapital.mc2.me.commons.infrastructure.ignite.IgniteNodeFilter;
 import cn.rongcapital.mc2.me.commons.infrastructure.ignite.IgniteNodeType;
 import cn.rongcapital.mc2.me.commons.infrastructure.spring.BeanContext;
 import cn.rongcapital.mc2.me.ewa.data.store.CampaignErrorStore;
@@ -69,17 +68,16 @@ public class Config {
 	private String database;
 
 	@Bean
+	public IgniteCacheLoader igniteCacheLoader() {
+		return new IgniteCacheLoader();
+	}
+
+	@Bean
 	public CacheConfiguration<String, CampaignLog> campaignLogCacheConfig() {
-		CacheConfiguration<String, CampaignLog> cacheConfig = new CacheConfiguration<String, CampaignLog>(Consts.CAMPAIGN_LOG_CACHE_NAME);
+		CacheConfiguration<String, CampaignLog> cacheConfig = new CacheConfiguration<String, CampaignLog>(CacheName.CAMPAIGN_LOG_CACHE_NAME);
 		// Setting SQL schema for the cache.
 		cacheConfig.setIndexedTypes(String.class, CampaignLog.class);
-		cacheConfig.setNodeFilter(node -> {
-			Boolean value = node.attribute(IgniteNodeType.DATA_NODE.name());
-			if (null != value) {
-				return value.booleanValue();
-			}
-			return false;
-		});
+		cacheConfig.setNodeFilter(new IgniteNodeFilter(IgniteNodeType.DATA_NODE));
 		cacheConfig.setCacheStoreFactory(FactoryBuilder.factoryOf(CampaignLogStore.class));
 		cacheConfig.setWriteBehindEnabled(true);
 		cacheConfig.setReadThrough(true);
@@ -89,16 +87,10 @@ public class Config {
 
 	@Bean
 	public CacheConfiguration<String, CampaignStat> campaignStatCacheConfig() {
-		CacheConfiguration<String, CampaignStat> cacheConfig = new CacheConfiguration<String, CampaignStat>(Consts.CAMPAIGN_STAT_CACHE_NAME);
+		CacheConfiguration<String, CampaignStat> cacheConfig = new CacheConfiguration<String, CampaignStat>(CacheName.CAMPAIGN_STAT_CACHE_NAME);
 		// Setting SQL schema for the cache.
 		cacheConfig.setIndexedTypes(String.class, CampaignStat.class);
-		cacheConfig.setNodeFilter(node -> {
-			Boolean value = node.attribute(IgniteNodeType.DATA_NODE.name());
-			if (null != value) {
-				return value.booleanValue();
-			}
-			return false;
-		});
+		cacheConfig.setNodeFilter(new IgniteNodeFilter(IgniteNodeType.DATA_NODE));
 		cacheConfig.setCacheStoreFactory(FactoryBuilder.factoryOf(CampaignStatStore.class));
 		cacheConfig.setWriteBehindEnabled(true);
 		cacheConfig.setReadThrough(true);
@@ -108,7 +100,7 @@ public class Config {
 
 	@Bean
 	public CacheConfiguration<String, CampaignError> campaignErrorCacheConfig() {
-		CacheConfiguration<String, CampaignError> cacheConfig = new CacheConfiguration<String, CampaignError>(Consts.CAMPAIGN_ERROR_CACHE_NAME);
+		CacheConfiguration<String, CampaignError> cacheConfig = new CacheConfiguration<String, CampaignError>(CacheName.CAMPAIGN_ERROR_CACHE_NAME);
 		// Setting SQL schema for the cache.
 		cacheConfig.setIndexedTypes(String.class, CampaignError.class);
 		cacheConfig.setNodeFilter(node -> {
@@ -127,16 +119,11 @@ public class Config {
 
 	@Bean
 	public Ignite igniteInstance() {
-		TcpDiscoverySpi discoverySpi = new TcpDiscoverySpi();
-		TcpDiscoveryVmIpFinder ipFinder = new TcpDiscoveryVmIpFinder();
-		ipFinder.setAddresses(Arrays.asList(addresses));
-		discoverySpi.setIpFinder(ipFinder);
 		// Ignite persistence configuration.
 		// DataStorageConfiguration storageConfiguration = new DataStorageConfiguration();
 		// Enabling the persistence.
 		// storageConfiguration.getDefaultDataRegionConfiguration().setPersistenceEnabled(true);
 		IgniteConfiguration configuration = new IgniteConfiguration();
-		configuration.setDiscoverySpi(discoverySpi);
 		configuration.setUserAttributes(Collections.singletonMap(IgniteNodeType.DATA_NODE.name(), true));
 		// Setting some custom name for the node.
 		configuration.setIgniteInstanceName(name);

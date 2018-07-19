@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import cn.rongcapital.mc2.me.commons.infrastructure.ignite.IgniteEntity;
 import cn.rongcapital.mc2.me.ewa.domain.FieldName;
 
+@SuppressWarnings("serial")
 @Document(collection = "campaign_error")
 public class CampaignError extends IgniteEntity {
 

@@ -12,4 +12,8 @@ public interface CampaignStatRepository extends IgniteRepository<CampaignStat, S
 
 	List<CampaignStat> findByFlowIdAndNodeTypeNot(String flowId, String nodeType);
 
+	List<CampaignStat> findByFlowId(String flowId);
+
+	List<CampaignStat> findByCampaignId(String campaignId);
+
 }

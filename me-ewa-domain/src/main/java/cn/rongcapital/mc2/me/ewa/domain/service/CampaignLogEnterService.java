@@ -16,34 +16,37 @@ public class CampaignLogEnterService {
 
 	public void logFail(EwpContext context) {
 		int mid = context.lookupMid();
+		String campaignId = context.getCampaignId();
 		String flowId = context.getFlowId();
 		String nodeId = context.lookupNodeId();
 		String nodeType = context.lookupNodeType();
 		int code = context.lookupResultCode();
 		String message = context.lookupResultMessage();
-		CampaignLog log = new CampaignLog(mid, CampaignLogType.FAILED.name(), flowId, nodeId, nodeType, code, message);
+		CampaignLog log = new CampaignLog(mid, CampaignLogType.FAILED.name(), campaignId, flowId, nodeId, nodeType, code, message);
 		campaignLogRepository.save(log);
 	}
 
 	public void logMove(EwpContext context) {
 		int mid = context.lookupMid();
+		String campaignId = context.getCampaignId();
 		String flowId = context.getFlowId();
 		String nodeId = context.lookupNodeId();
 		String nodeType = context.lookupNodeType();
 		int code = context.lookupResultCode();
 		String message = context.lookupResultMessage();
-		CampaignLog log = new CampaignLog(mid, CampaignLogType.MOVED.name(), flowId, nodeId, nodeType, code, message);
+		CampaignLog log = new CampaignLog(mid, CampaignLogType.MOVED.name(), campaignId, flowId, nodeId, nodeType, code, message);
 		campaignLogRepository.save(log);
 	}
 
 	public void logStay(EwpContext context) {
 		int mid = context.lookupMid();
+		String campaignId = context.getCampaignId();
 		String flowId = context.getFlowId();
 		String nodeId = context.lookupNodeId();
 		String nodeType = context.lookupNodeType();
 		int code = context.lookupResultCode();
 		String message = context.lookupResultMessage();
-		CampaignLog log = new CampaignLog(mid, CampaignLogType.STAYED.name(), flowId, nodeId, nodeType, code, message);
+		CampaignLog log = new CampaignLog(mid, CampaignLogType.STAYED.name(), campaignId, flowId, nodeId, nodeType, code, message);
 		campaignLogRepository.save(log);
 	}
 

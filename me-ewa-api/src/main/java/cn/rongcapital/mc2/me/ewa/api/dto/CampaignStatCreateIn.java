@@ -4,6 +4,8 @@ import cn.rongcapital.mc2.me.commons.api.ApiIn;
 
 public class CampaignStatCreateIn implements ApiIn {
 
+	private String campaignId;
+
 	private String flowId;
 
 	private String nodeId;
@@ -14,11 +16,20 @@ public class CampaignStatCreateIn implements ApiIn {
 
 	public CampaignStatCreateIn() {}
 
-	public CampaignStatCreateIn(String flowId, String nodeId, String type, int stayCount) {
+	public CampaignStatCreateIn(String campaignId, String flowId, String nodeId, String type, int stayCount) {
+		this.campaignId = campaignId;
 		this.flowId = flowId;
 		this.nodeId = nodeId;
 		this.type = type;
 		this.stayCount = stayCount;
+	}
+
+	public String getCampaignId() {
+		return campaignId;
+	}
+
+	public void setCampaignId(String campaignId) {
+		this.campaignId = campaignId;
 	}
 
 	public String getFlowId() {

@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import cn.rongcapital.mc2.me.commons.infrastructure.ignite.IgniteEntity;
 import cn.rongcapital.mc2.me.ewa.domain.FieldName;
 
+@SuppressWarnings("serial")
 @Document(collection = "campaign_log")
 public class CampaignLog extends IgniteEntity {
 
@@ -19,6 +20,11 @@ public class CampaignLog extends IgniteEntity {
 	@Expose
 	@Field(FieldName.FIELD_TYPE)
 	private String type;
+
+	@Expose
+	@QuerySqlField(index = true)
+	@Field(FieldName.FIELD_CAMPAIGN_ID)
+	private String campaignId;
 
 	@Expose
 	@QuerySqlField(index = true)
@@ -40,9 +46,10 @@ public class CampaignLog extends IgniteEntity {
 
 	public CampaignLog() {}
 
-	public CampaignLog(int mid, String type, String flowId, String nodeId, String nodeType, int code, String message) {
+	public CampaignLog(int mid, String type, String campaignId, String flowId, String nodeId, String nodeType, int code, String message) {
 		this.mid = mid;
 		this.type = type;
+		this.campaignId = campaignId;
 		this.flowId = flowId;
 		this.nodeId = nodeId;
 		this.nodeType = nodeType;

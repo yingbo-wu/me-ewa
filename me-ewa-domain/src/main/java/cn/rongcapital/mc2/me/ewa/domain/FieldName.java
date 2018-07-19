@@ -4,6 +4,7 @@ public interface FieldName {
 
 	String FIELD_MID = "mid";
 	String FIELD_TYPE = "type";
+	String FIELD_CAMPAIGN_ID = "campaign_id";
 	String FIELD_FLOW_ID = "flow_id";
 	String FIELD_NODE_ID = "node_id";
 	String FIELD_NODE_TYPE = "node_type";
